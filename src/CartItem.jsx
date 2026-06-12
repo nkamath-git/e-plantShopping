@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import { addItem, removeItem, updateQuantity } from './CartSlice';
 
 const CartItem = () => {
+
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
+
 
   // Calculate total amount
   const calculateTotalAmount = () => {
@@ -15,41 +17,52 @@ const CartItem = () => {
     );
   };
 
-  // Increase item quantity
+
+  // Increase item quantity using addItem()
   const handleIncrement = (item) => {
-    dispatch(
-      updateQuantity({
-        name: item.name,
-        quantity: item.quantity + 1,
-      })
-    );
+    dispatch(addItem(item));
   };
 
-  // Decrease item quantity
+
+  // Decrease item quantity using updateQuantity()
   const handleDecrement = (item) => {
+
     if (item.quantity > 1) {
+
       dispatch(
         updateQuantity({
           name: item.name,
           quantity: item.quantity - 1,
         })
       );
+
     } else {
-      dispatch(removeItem({ name: item.name }));
+
+      dispatch(removeItem(item.name));
+
     }
   };
 
-  // Remove item completely
+
+  // Remove item completely using removeItem()
   const handleRemove = (item) => {
-    dispatch(removeItem({ name: item.name }));
+    dispatch(removeItem(item.name));
   };
 
+
   return (
+
     <div className="cart-container">
-      <h2>Total Cart Amount: ${calculateTotalAmount()}</h2>
+
+      <h2>
+        Total Cart Amount: ${calculateTotalAmount().toFixed(2)}
+      </h2>
+
 
       {cartItems.map((item) => (
+
         <div className="cart-item" key={item.name}>
+
 
           <img
             src={item.image}
@@ -57,22 +70,32 @@ const CartItem = () => {
             className="cart-item-image"
           />
 
+
           <div className="cart-item-details">
+
             <h3>{item.name}</h3>
 
             <p>{item.cost}</p>
 
+
             <div>
+
               <button onClick={() => handleDecrement(item)}>
                 -
               </button>
 
-              <span>{item.quantity}</span>
+
+              <span>
+                {item.quantity}
+              </span>
+
 
               <button onClick={() => handleIncrement(item)}>
                 +
               </button>
+
             </div>
+
 
             <p>
               Total: $
@@ -82,15 +105,23 @@ const CartItem = () => {
               ).toFixed(2)}
             </p>
 
+
             <button onClick={() => handleRemove(item)}>
               Delete
             </button>
 
+
           </div>
+
         </div>
+
       ))}
+
     </div>
+
   );
+
 };
+
 
 export default CartItem;
